@@ -65,7 +65,7 @@ class PeriodoUtil:
             salida.append(Periodo(fecha_inicio=(inicio + i * delta), delta=delta))
 
         return salida
-    
+
     @staticmethod
     def generarPeriodosPorNumeroSemanas(
         inicio: date, cantidad_periodos: int = 1, cantidad_semanas: int = 1
@@ -76,7 +76,7 @@ class PeriodoUtil:
             salida.append(Periodo(fecha_inicio=(inicio + i * delta), delta=delta))
 
         return salida
-    
+
     @staticmethod
     def generarPeriodosPorNumeroHoras(
         inicio: date, cantidad_periodos: int = 1, cantidad_horas: int = 1
@@ -88,10 +88,22 @@ class PeriodoUtil:
 
         return salida
 
+
 class Orden:
-    def __init__(self, detalle: Dict[Producto, Dict["Periodo", float]] = {}):
+    def __init__(
+        self, nombre: str, detalle: Dict[Producto, Dict["Periodo", float]] = {}
+    ):
         """ """
+        self._nombre = nombre
         self._detalle = detalle
+
+    @property
+    def nombre(self) -> str:
+        return self._nombre
+
+    @nombre.setter
+    def nombre(self, value: str) -> None:
+        self._nombre = value
 
     @property
     def detalle(self) -> Dict[Producto, Dict["Periodo", float]]:
@@ -105,18 +117,20 @@ class Orden:
         self, producto: Producto, detalle: Dict["Periodo", float]
     ) -> None:
         self.detalle[producto] = detalle
-        
 
 
 class OrdenUtil:
     @staticmethod
-    def generarPeriodosPorNumeroDias(
-        inicio: date, cantidad_periodos: int = 1, cantidad_dias: int = 1
-    ) -> List["Periodo"]:
-        salida: List["Periodo"] = []
-        delta: timedelta = timedelta(days=cantidad_dias)
-        for i in range(cantidad_periodos):
-            salida.append(Periodo(fecha_inicio=(inicio + i * delta), delta=delta))
+    def generarOrdenConProductoPeriodosEnCero(
+        nombre: str, productos: List["Producto"], periodos: List["Periodo"]
+    ) -> Orden:
+        salida: Orden = Orden(nombre=nombre)
+        for producto in productos:
+            detalle: Dict["Periodo", float] = {}
+            for periodo in periodos:
+                detalle[periodo] = 0
+
+            salida.agregar_producto_con_detalle(producto=producto, detalle=detalle)
 
         return salida
 
