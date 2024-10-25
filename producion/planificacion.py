@@ -36,11 +36,11 @@ class Periodo:
 
     @property
     def semana_iso(self) -> str:
-        return "{:d}-W{:02d}".format(self._anno_iso, self._numero_semana_iso)
+        return '{:d}-W{:02d}'.format(self._anno_iso, self._numero_semana_iso)
 
     @property
     def semana_iso_dia(self) -> str:
-        return "{:d}-W{:02d}-{:d}".format(
+        return '{:d}-W{:02d}-{:d}'.format(
             self._anno_iso, self._numero_semana_iso, self._dia_semana_iso
         )
 
@@ -58,8 +58,8 @@ class PeriodoUtil:
     @staticmethod
     def generarPeriodosPorNumeroDias(
         inicio: date, cantidad_periodos: int = 1, cantidad_dias: int = 1
-    ) -> List["Periodo"]:
-        salida: List["Periodo"] = []
+    ) -> List['Periodo']:
+        salida: List['Periodo'] = []
         delta: timedelta = timedelta(days=cantidad_dias)
         for i in range(cantidad_periodos):
             salida.append(Periodo(fecha_inicio=(inicio + i * delta), delta=delta))
@@ -69,8 +69,8 @@ class PeriodoUtil:
     @staticmethod
     def generarPeriodosPorNumeroSemanas(
         inicio: date, cantidad_periodos: int = 1, cantidad_semanas: int = 1
-    ) -> List["Periodo"]:
-        salida: List["Periodo"] = []
+    ) -> List['Periodo']:
+        salida: List['Periodo'] = []
         delta: timedelta = timedelta(weeks=cantidad_semanas)
         for i in range(cantidad_periodos):
             salida.append(Periodo(fecha_inicio=(inicio + i * delta), delta=delta))
@@ -80,8 +80,8 @@ class PeriodoUtil:
     @staticmethod
     def generarPeriodosPorNumeroHoras(
         inicio: date, cantidad_periodos: int = 1, cantidad_horas: int = 1
-    ) -> List["Periodo"]:
-        salida: List["Periodo"] = []
+    ) -> List['Periodo']:
+        salida: List['Periodo'] = []
         delta: timedelta = timedelta(hours=cantidad_horas)
         for i in range(cantidad_periodos):
             salida.append(Periodo(fecha_inicio=(inicio + i * delta), delta=delta))
@@ -91,9 +91,9 @@ class PeriodoUtil:
 
 class Orden:
     def __init__(
-        self, nombre: str, detalle: Dict[Producto, Dict["Periodo", float]] = {}
+        self, nombre: str, detalle: Dict[Producto, Dict['Periodo', float]] = {}
     ):
-        """ """
+        ''' '''
         self._nombre = nombre
         self._detalle = detalle
 
@@ -106,15 +106,15 @@ class Orden:
         self._nombre = value
 
     @property
-    def detalle(self) -> Dict[Producto, Dict["Periodo", float]]:
+    def detalle(self) -> Dict[Producto, Dict['Periodo', float]]:
         return self._detalle
 
     @detalle.setter
-    def detalle(self, value: Dict[Producto, Dict["Periodo", float]]):
+    def detalle(self, value: Dict[Producto, Dict['Periodo', float]]):
         self._detalle = value
 
     def agregar_producto_con_detalle(
-        self, producto: Producto, detalle: Dict["Periodo", float]
+        self, producto: Producto, detalle: Dict['Periodo', float]
     ) -> None:
         self.detalle[producto] = detalle
 
@@ -122,11 +122,11 @@ class Orden:
 class OrdenUtil:
     @staticmethod
     def generarOrdenConProductoPeriodosEnCero(
-        nombre: str, productos: List["Producto"], periodos: List["Periodo"]
+        nombre: str, productos: List['Producto'], periodos: List['Periodo']
     ) -> Orden:
         salida: Orden = Orden(nombre=nombre)
         for producto in productos:
-            detalle: Dict["Periodo", float] = {}
+            detalle: Dict['Periodo', float] = {}
             for periodo in periodos:
                 detalle[periodo] = 0
 

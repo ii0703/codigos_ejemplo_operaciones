@@ -57,10 +57,10 @@ class Producto:
         self._cantidad_disponible = value
 
     def __str__(self):
-        return "([{:_>20}]:-{:40})".format(self.codigo, self.nombre)
+        return '([{:_>20}]:-{:40})'.format(self.codigo, self.nombre)
 
     def __repr__(self):
-        return "([{:_>20}]:{:40})".format(self.codigo, self.nombre)
+        return '([{:_>20}]:{:40})'.format(self.codigo, self.nombre)
 
 
 class MateriaPrima(Producto):
