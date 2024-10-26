@@ -59,7 +59,7 @@ class Linea:
         duracion: Optional[timedelta] = None
         for maq in self.secuencia_maquinas:
             print('a')
-            duracion: maq.obtener_duracion_producto(codigo_producto=codigo_producto)
+            duracion = maq.obtener_duracion_producto(codigo_producto=codigo_producto)
             print('b')
             if duracion is not None:
                 duraciones.append((maq, duracion))
@@ -133,8 +133,6 @@ class Maquina:
         self, codigo_producto: str, duracion: timedelta
     ) -> None:
         self.duracion_por_producto[codigo_producto] = duracion
-
-
 
 
 class Buffer:
