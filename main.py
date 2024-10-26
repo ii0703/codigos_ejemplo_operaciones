@@ -46,6 +46,10 @@ lineaA.agregar(maqC)
 lineaA.agregar(maqA)
 
 print(lineaA.secuencia)
+maqB.agregar_duracion_producto("A01",timedelta(minutes=2, seconds=45))
+lineaA.agregar_duracion_producto("A","A01",timedelta(minutes=1, seconds=15))
+print(lineaA.obtener_duracion_por_maquina_para_producto("A01"))
+
 x = timedelta(seconds=30, milliseconds=1)
 y = TimeDeltaUtils.redondear_timedelta_segundos(x, 60)
 print(x, y)

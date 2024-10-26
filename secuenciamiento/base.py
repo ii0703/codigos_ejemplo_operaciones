@@ -1,4 +1,5 @@
 from produccion.base import Producto
+
 from typing import List, Dict, Tuple, Optional
 from datetime import timedelta
 
@@ -56,12 +57,15 @@ class Linea:
     ) -> List[Optional[Tuple["Maquina", timedelta]]]:
         duraciones: List[Tuple["Maquina", timedelta] | None] = []
         duracion: Optional[timedelta] = None
-        for maquina in self.secuencia_maquinas:
-            duracion: maquina.obtener_duracion_producto(codigo_producto)
+        for maq in self.secuencia_maquinas:
+            print('a')
+            duracion: maq.obtener_duracion_producto(codigo_producto=codigo_producto)
+            print('b')
             if duracion is not None:
-                duraciones.append((maquina, duracion))
+                duraciones.append((maq, duracion))
             else:
                 duraciones.append(None)
+        return duraciones
 
 
 class Maquina:
@@ -118,16 +122,19 @@ class Maquina:
     def duracion_por_producto(self, value: Dict["str", timedelta]) -> None:
         self._duracion_por_producto = value
 
+    def obtener_duracion_producto(self, codigo_producto: str) -> Optional[timedelta]:
+        print('entro')
+        salida: Optional[timedelta] = None
+        if codigo_producto in self.duracion_por_producto:
+            salida = self.duracion_por_producto[codigo_producto]
+        return salida
+
     def agregar_duracion_producto(
         self, codigo_producto: str, duracion: timedelta
     ) -> None:
         self.duracion_por_producto[codigo_producto] = duracion
 
-    def obtener_duracion_producto(self, codigo_producto: str) -> Optional[timedelta]:
-        salida: Optional[timedelta] = None
-        if codigo_producto in self.duracion_por_producto:
-            salida = self.duracion_por_producto[codigo_producto]
-        return salida
+
 
 
 class Buffer:
