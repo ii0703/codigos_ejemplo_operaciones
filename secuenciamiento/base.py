@@ -1,10 +1,10 @@
-from producion.base import Producto
-from typing import List, Dict
+from produccion.base import Producto
+from typing import List, Dict, Tuple, Optional
 from datetime import timedelta
 
 
 class CalculadoraTiempoSecuencia:
-    def calcular_tiempo_secuencia(self, linea: 'Linea', producto: Producto) -> float:
+    def calcular_tiempo_secuencia(self, linea: "Linea", producto: Producto) -> float:
         tiempo_total = 0
         for maquina in linea.secuencia_maquinas:
             tiempo_maquina = linea.tiempos_procesamiento[producto][maquina]
@@ -16,11 +16,10 @@ class Linea:
     def __init__(
         self,
         nombre: str,
-        secuencia_maquinas: List['Maquina'] = [],
+        secuencia_maquinas: List["Maquina"] = [],
     ):
         self._nombre = nombre
         self._secuencia_maquinas = secuencia_maquinas
-        self._duracion_por_producto: Dict['str', timedelta] = {}
 
     @property
     def nombre(self) -> str:
@@ -31,22 +30,38 @@ class Linea:
         self._nombre = value
 
     @property
-    def secuencia_maquinas(self) -> List['Maquina']:
+    def secuencia_maquinas(self) -> List["Maquina"]:
         return self._secuencia_maquinas
 
     @secuencia_maquinas.setter
-    def secuencia_maquinas(self, value: List['Maquina']):
+    def secuencia_maquinas(self, value: List["Maquina"]):
         self._secuencia_maquinas = value
 
     @property
     def secuencia(self) -> List[str]:
         return [m._codigo for m in self.secuencia_maquinas]
 
-    def agregar(self, maquina: 'Maquina') -> None:
+    def agregar(self, maquina: "Maquina") -> None:
         self.secuencia_maquinas.append(maquina)
 
-    def agregar_duracion_producto(self, producto: str, duracion: timedelta) -> None:
-        self.duracion_por_producto[producto] = duracion
+    def agregar_duracion_producto(
+        self, codigo_maquina: str, codigo_producto: str, duracion: timedelta
+    ) -> None:
+        for maquina in self.secuencia_maquinas:
+            if maquina.codigo == codigo_maquina:
+                maquina.agregar_duracion_producto(codigo_producto, duracion)
+
+    def obtener_duracion_por_maquina_para_producto(
+        self, codigo_producto: str
+    ) -> List[Optional[Tuple["Maquina", timedelta]]]:
+        duraciones: List[Tuple["Maquina", timedelta] | None] = []
+        duracion: Optional[timedelta] = None
+        for maquina in self.secuencia_maquinas:
+            duracion: maquina.obtener_duracion_producto(codigo_producto)
+            if duracion is not None:
+                duraciones.append((maquina, duracion))
+            else:
+                duraciones.append(None)
 
 
 class Maquina:
@@ -54,14 +69,14 @@ class Maquina:
         self,
         codigo: str,
         nombre: str,
-        buffer_entrada: 'Buffer' = 'Buffer',
-        buffer_salida: 'Buffer' = 'Buffer',
+        buffer_entrada: "Buffer" = "Buffer",
+        buffer_salida: "Buffer" = "Buffer",
     ):
         self._codigo: str = codigo
         self._nombre: str = nombre
-        self._buffer_entrada: 'Buffer' = buffer_entrada
-        self._buffer_salida: 'Buffer' = buffer_salida
-        self._duracion_por_producto: Dict['str', timedelta] = {}
+        self._buffer_entrada: "Buffer" = buffer_entrada
+        self._buffer_salida: "Buffer" = buffer_salida
+        self._duracion_por_producto: Dict["str", timedelta] = {}
 
     @property
     def codigo(self) -> str:
@@ -80,31 +95,39 @@ class Maquina:
         self._nombre = value
 
     @property
-    def buffer_entrada(self) -> 'Buffer':
+    def buffer_entrada(self) -> "Buffer":
         return self._buffer_entrada
 
     @buffer_entrada.setter
-    def buffer_entrada(self, value: 'Buffer'):
+    def buffer_entrada(self, value: "Buffer"):
         self._buffer_entrada = value
 
     @property
-    def buffer_salida(self) -> 'Buffer':
+    def buffer_salida(self) -> "Buffer":
         return self._buffer_salida
 
     @buffer_salida.setter
-    def buffer_salida(self, value: 'Buffer'):
+    def buffer_salida(self, value: "Buffer"):
         self._buffer_salida = value
 
     @property
-    def duracion_por_producto(self) -> Dict['str', timedelta]:
+    def duracion_por_producto(self) -> Dict["str", timedelta]:
         return self._duracion_por_producto
 
     @duracion_por_producto.setter
-    def duracion_por_producto(self, value: Dict['str', timedelta]) -> None:
+    def duracion_por_producto(self, value: Dict["str", timedelta]) -> None:
         self._duracion_por_producto = value
 
-    def agregar_duracion_producto(self, producto: str, duracion: timedelta) -> None:
-        self.duracion_por_producto[producto] = duracion
+    def agregar_duracion_producto(
+        self, codigo_producto: str, duracion: timedelta
+    ) -> None:
+        self.duracion_por_producto[codigo_producto] = duracion
+
+    def obtener_duracion_producto(self, codigo_producto: str) -> Optional[timedelta]:
+        salida: Optional[timedelta] = None
+        if codigo_producto in self.duracion_por_producto:
+            salida = self.duracion_por_producto[codigo_producto]
+        return salida
 
 
 class Buffer:
@@ -124,10 +147,10 @@ class Buffer:
         if len(self._productos) < self._capacidad:
             self._productos.append(producto)
         else:
-            raise ValueError('El buffer está lleno.')
+            raise ValueError("El buffer está lleno.")
 
     def despachar_producto(self) -> Producto:
         if self._productos:
             return self._productos.pop(0)  # FIFO
         else:
-            raise ValueError('El buffer está vacío.')
+            raise ValueError("El buffer está vacío.")
