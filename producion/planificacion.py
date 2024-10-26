@@ -93,7 +93,6 @@ class Orden:
     def __init__(
         self, nombre: str, detalle: Dict[Producto, Dict['Periodo', float]] = {}
     ):
-        ''' '''
         self._nombre = nombre
         self._detalle = detalle
 
@@ -133,6 +132,11 @@ class OrdenUtil:
             salida.agregar_producto_con_detalle(producto=producto, detalle=detalle)
 
         return salida
+
+    @staticmethod
+    def agregarProductoDetalle(orden: 'Orden', producto: Producto, periodos: List['Periodo'], demandas: List[float]) -> None:
+        valores: Dict['Periodo', float] = {k: v for k, v in zip(periodos, demandas)}
+        orden.agregar_producto_con_detalle(producto=producto, detalle=valores)
 
 
 class Demanda(Orden):
