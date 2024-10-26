@@ -87,3 +87,9 @@ class Cliente:
     @nombre.setter
     def nombre(self, value: str):
         self._nombre = value
+
+    def __repr__(self):
+        return f"Cliente(codigo={self.codigo!r}, nombre={self.nombre!r})"
+
+    def __str__(self):
+        return f"Cliente {self.nombre} con código {self.codigo}"

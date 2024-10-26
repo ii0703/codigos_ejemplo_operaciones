@@ -82,6 +82,19 @@ class Orden:
     ) -> None:
         self.detalle[producto] = detalle
 
+    def __repr__(self):
+        return f"Orden(nombre={self.nombre!r}, detalle={self.detalle!r})"
+
+    def __str__(self):
+        return f"Orden {self.nombre} con {len(self.detalle)} productos"
+
+
 
 class Demanda(Orden):
-    pass  # Hereda de Orden
+
+    def __repr__(self):
+        return f"Demanda(nombre={self.nombre!r}, detalle={self.detalle!r})"
+
+    def __str__(self):
+        return f"Demanda {self.nombre} con {len(self.detalle)} productos"
+

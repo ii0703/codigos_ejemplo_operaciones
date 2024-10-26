@@ -12,6 +12,12 @@ class CalculadoraTiempoSecuencia:
             tiempo_total += tiempo_maquina
         return tiempo_total
 
+    def __repr__(self):
+        return "CalculadoraTiempoSecuencia()"
+
+    def __str__(self):
+        return "Calculadora de tiempo de secuencia"
+
 
 class Linea:
     def __init__(
@@ -66,6 +72,12 @@ class Linea:
             else:
                 duraciones.append(None)
         return duraciones
+
+    def __repr__(self):
+        return f"Linea(nombre={self.nombre!r}, secuencia_maquinas={self.secuencia_maquinas!r})"
+
+    def __str__(self):
+        return f"Línea {self.nombre} con {len(self.secuencia_maquinas)} máquinas"
 
 
 class Maquina:
@@ -134,6 +146,13 @@ class Maquina:
     ) -> None:
         self.duracion_por_producto[codigo_producto] = duracion
 
+    def __repr__(self):
+        return f"Maquina(codigo={self.codigo!r}, nombre={self.nombre!r})"
+
+    def __str__(self):
+        return f"Máquina {self.nombre} con código {self.codigo}"
+
+
 
 class Buffer:
     def __init__(self, capacidad: int = 10):  # Capacidad por defecto: 10
@@ -159,3 +178,9 @@ class Buffer:
             return self._productos.pop(0)  # FIFO
         else:
             raise ValueError("El buffer está vacío.")
+
+    def __repr__(self):
+        return "Buffer()"
+
+    def __str__(self):
+        return "Buffer de la máquina"
