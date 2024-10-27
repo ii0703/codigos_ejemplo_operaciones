@@ -64,14 +64,17 @@ class Linea:
         duraciones: List[Tuple["Maquina", timedelta] | None] = []
         duracion: Optional[timedelta] = None
         for maq in self.secuencia_maquinas:
-            print('a')
             duracion = maq.obtener_duracion_producto(codigo_producto=codigo_producto)
-            print('b')
             if duracion is not None:
                 duraciones.append((maq, duracion))
             else:
                 duraciones.append(None)
         return duraciones
+    
+    @staticmethod
+    def evaluar_duracion_por_maquina_para_producto(duraciones: List[Optional[Tuple["Maquina", timedelta]]]) -> bool:
+        return all([d is not None for d in duraciones])
+
 
     def __repr__(self):
         return f"Linea(nombre={self.nombre!r}, secuencia_maquinas={self.secuencia_maquinas!r})"
@@ -135,7 +138,6 @@ class Maquina:
         self._duracion_por_producto = value
 
     def obtener_duracion_producto(self, codigo_producto: str) -> Optional[timedelta]:
-        print('entro')
         salida: Optional[timedelta] = None
         if codigo_producto in self.duracion_por_producto:
             salida = self.duracion_por_producto[codigo_producto]

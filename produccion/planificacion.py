@@ -82,6 +82,9 @@ class Orden:
     ) -> None:
         self.detalle[producto] = detalle
 
+    def listar_productos(self) -> List[Producto]:
+        return list(self.detalle.keys())
+
     def __repr__(self):
         return f"Orden(nombre={self.nombre!r}, detalle={self.detalle!r})"
 

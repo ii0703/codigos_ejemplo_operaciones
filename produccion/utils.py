@@ -4,6 +4,7 @@ from typing import List, Dict
 from datetime import datetime, date, timedelta
 from math import ceil, floor
 
+
 class PeriodoUtil:
     @staticmethod
     def generarPeriodosPorNumeroDias(
@@ -37,7 +38,8 @@ class PeriodoUtil:
             salida.append(Periodo(fecha_inicio=(inicio + i * delta), delta=delta))
 
         return salida
-    
+
+
 class OrdenUtil:
     @staticmethod
     def generarOrdenConProductoPeriodosEnCero(
@@ -63,10 +65,25 @@ class OrdenUtil:
         valores: Dict["Periodo", float] = {k: v for k, v in zip(periodos, demandas)}
         orden.agregar_producto_con_detalle(producto=producto, detalle=valores)
 
+
 class TimeDeltaUtils:
-    
+
     @staticmethod
-    def redondear_timedelta_segundos(duracion: timedelta, segundos_multiplo: int) -> timedelta:
+    def redondear_timedelta_segundos(
+        duracion: timedelta, segundos_multiplo: int
+    ) -> timedelta:
         segundos: float = duracion.total_seconds()
         segundos_ajustados = round(segundos / segundos_multiplo) * segundos_multiplo
         return timedelta(seconds=segundos_ajustados)
+
+    @staticmethod
+    def calcular_duracion_unidad_por_minuto(cantidad_en_un_minuto) -> timedelta:
+        return TimeDeltaUtils.redondear_timedelta_segundos(
+            timedelta(minutes=1) / cantidad_en_un_minuto, 1
+        )
+    
+    @staticmethod
+    def calcular_duracion_unidad_por_hora(cantidad_en_una_hora) -> timedelta:
+        return TimeDeltaUtils.redondear_timedelta_segundos(
+            timedelta(hours=1) / cantidad_en_una_hora, 1
+        )

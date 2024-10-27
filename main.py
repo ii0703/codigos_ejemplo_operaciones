@@ -4,7 +4,7 @@ from secuenciamiento.base import Maquina, Linea
 from produccion.utils import TimeDeltaUtils, PeriodoUtil, OrdenUtil
 
 from datetime import datetime, timedelta, date
-from typing import List, Dict
+from typing import List, Dict, Tuple, Optional
 from random import randint
 
 import pandas as pd
@@ -20,7 +20,7 @@ productos.append(Producto(codigo="C01", nombre="Tiendas de campañas de 2 person
 productos.append(Producto(codigo="C02", nombre="Tiendas de campañas de 4 personas"))
 productos.append(Producto(codigo="C03", nombre="Tiendas de campañas de 6 personas"))
 
-print(len(periodos), periodos)
+# print(len(periodos), periodos)
 
 orden: Orden = Orden(nombre="ORD9814257")
 cantidades_demanda = [100, 350, 200, 450, 600, 125, 400]
@@ -45,11 +45,32 @@ lineaA.agregar(maqB)
 lineaA.agregar(maqC)
 lineaA.agregar(maqA)
 
-print(lineaA.secuencia)
-maqB.agregar_duracion_producto("A01",timedelta(minutes=2, seconds=45))
-lineaA.agregar_duracion_producto("A","A01",timedelta(minutes=1, seconds=15))
-print(lineaA.obtener_duracion_por_maquina_para_producto("A01"))
+# print(lineaA.secuencia)
 
-x = timedelta(seconds=30, milliseconds=1)
-y = TimeDeltaUtils.redondear_timedelta_segundos(x, 60)
-print(x, y)
+lineaA.agregar_duracion_producto("A","A01", TimeDeltaUtils.calcular_duracion_unidad_por_hora(15))
+lineaA.agregar_duracion_producto("B","A01",TimeDeltaUtils.calcular_duracion_unidad_por_hora(25))
+lineaA.agregar_duracion_producto("C","A01",TimeDeltaUtils.calcular_duracion_unidad_por_hora(12))
+
+lineaA.agregar_duracion_producto("A","C01", TimeDeltaUtils.calcular_duracion_unidad_por_hora(11))
+lineaA.agregar_duracion_producto("B","C01",TimeDeltaUtils.calcular_duracion_unidad_por_hora(17))
+lineaA.agregar_duracion_producto("C","C01",TimeDeltaUtils.calcular_duracion_unidad_por_hora(7))
+
+lineaA.agregar_duracion_producto("A","C03", TimeDeltaUtils.calcular_duracion_unidad_por_hora(14))
+lineaA.agregar_duracion_producto("B","C03",TimeDeltaUtils.calcular_duracion_unidad_por_hora(15))
+lineaA.agregar_duracion_producto("C","C03",TimeDeltaUtils.calcular_duracion_unidad_por_hora(20))
+
+duraciones: List[Optional[Tuple["Maquina", timedelta]]] = lineaA.obtener_duracion_por_maquina_para_producto("A01")
+for duracion in duraciones:
+    print(duracion[0].nombre, duracion[1])
+
+duraciones: List[Optional[Tuple["Maquina", timedelta]]] = lineaA.obtener_duracion_por_maquina_para_producto("C01")
+for duracion in duraciones:
+    print(duracion[0].nombre, duracion[1])
+
+duraciones: List[Optional[Tuple["Maquina", timedelta]]] = lineaA.obtener_duracion_por_maquina_para_producto("C03")
+for duracion in duraciones:
+    print(duracion[0].nombre, duracion[1])
+
+productos: List["Producto"] = orden.listar_productos()
+for producto in productos:
+    print(producto.codigo)
