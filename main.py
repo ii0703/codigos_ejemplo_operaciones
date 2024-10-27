@@ -74,3 +74,5 @@ for duracion in duraciones:
 productos: List["Producto"] = orden.listar_productos()
 for producto in productos:
     print(producto.codigo)
+
+# test
