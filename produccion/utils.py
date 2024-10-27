@@ -16,7 +16,7 @@ class TimeDeltaUtils:
         return TimeDeltaUtils.redondear_timedelta_segundos(
             timedelta(minutes=1) / cantidad_en_un_minuto, 1
         )
-    
+
     @staticmethod
     def calcular_duracion_unidad_por_hora(cantidad_en_una_hora) -> timedelta:
         return TimeDeltaUtils.redondear_timedelta_segundos(

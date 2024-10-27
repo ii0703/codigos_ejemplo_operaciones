@@ -1,9 +1,9 @@
 from typing import Dict, List, Optional, Tuple
 
 import pandas as pd
-from produccion.base import Producto
-from produccion.demanda import Periodo
-from produccion.periodo import PeriodoUtil
+
+from produccion.periodo import Periodo, PeriodoUtil
+from produccion.producto import Producto
 
 
 class Orden:

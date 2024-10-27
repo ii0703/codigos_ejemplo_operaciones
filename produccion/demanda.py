@@ -1,7 +1,7 @@
-from produccion import orden
+from produccion.orden import Orden
 
 
-class Demanda(orden):
+class Demanda(Orden):
 
     def __repr__(self):
         return f"Demanda(nombre={self.nombre!r}, detalle={self.detalle!r})"

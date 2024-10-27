@@ -4,10 +4,10 @@ from typing import List
 
 import pandas as pd
 
-from produccion import Periodo
-from produccion.base import Producto
+
+from produccion.cliente import Producto
 from produccion.orden import Orden
-from produccion.periodo import PeriodoUtil
+from produccion.periodo import Periodo, PeriodoUtil
 
 
 periodos: List["Periodo"] = PeriodoUtil.generarPeriodosPorNumeroDias(
