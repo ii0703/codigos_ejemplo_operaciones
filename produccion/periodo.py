@@ -67,7 +67,7 @@ class PeriodoUtil:
         salida: List["Periodo"] = []
         delta: timedelta = timedelta(days=cantidad_dias)
         for i in range(cantidad_periodos):
-            salida.append(Periodo(fecha_inicio=(inicio + i * delta), delta=delta))
+            salida.append(Periodo(fecha_inicio=(inicio + (i * delta)), delta=delta))
 
         return salida
 

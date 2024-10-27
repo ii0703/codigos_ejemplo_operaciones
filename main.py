@@ -1,20 +1,19 @@
-from datetime import date
+from datetime import date, datetime
 from random import randint
 from typing import List
 
 import pandas as pd
 
-
-from produccion.cliente import Producto
 from produccion.orden import Orden
 from produccion.periodo import Periodo, PeriodoUtil
+from produccion.producto import Producto
 
 
 periodos: List["Periodo"] = PeriodoUtil.generarPeriodosPorNumeroDias(
-    date(2024, month=1, day=1), cantidad_periodos=7, cantidad_dias=1
+    date(2024, month=1, day=1), cantidad_periodos=4, cantidad_dias=1
 )
 
-# Se crean los productos que serán usados en la planificación, 
+# Se crean los productos que serán usados en la planificación,
 # para no estár creando productos, se almacenarán en una lista y luego se usarán
 # a través de su posición para registrarlos en la orden
 productos: List["Producto"] = []
@@ -117,34 +116,25 @@ productos.append(Producto(codigo="C03", nombre="Tiendas de campañas de 6 person
 # for duracion in duraciones:
 #     print(duracion[0].nombre, duracion[1])
 
-# productos: List["Producto"] = orden.listar_productos()
-# for producto in productos:
-#     print(producto.codigo)
-
-# periodos_prueba: List["Periodo"] = []
-# periodos_prueba.append(Periodo(fecha_inicio=datetime(2024, 1, 3, 0, 0, 0)))
-# periodos_prueba.append(Periodo(fecha_inicio=datetime(2024, 1, 5, 0, 0, 0)))
-# periodos_prueba.append(Periodo(fecha_inicio=datetime(2024, 1, 2, 0, 0, 0)))
-# periodos_prueba.append(Periodo(fecha_inicio=datetime(2024, 1, 1, 0, 0, 0)))
-# periodos_prueba.append(Periodo(fecha_inicio=datetime(2024, 1, 4, 0, 0, 0)))
-
-# for p in periodos_prueba:
-#     print(p)
-
-# print("Ordenados")
-# periodos_ordenados: List["Periodo"] = PeriodoUtil.ordenarPeriodosPorFechaInicio(periodos_prueba)
-# for p in periodos_ordenados:
-#     print(p)
-
-# fecha_para_buscar: datetime = datetime(2024, 1, 6, 12, 0, 0)
-# periodo_encontrado: Optional["Periodo"] = PeriodoUtil.identificarPeriodoPorFecha(periodos_ordenados, fecha_para_buscar)
-# print('Periodo encontrado:', periodo_encontrado, 'para la fecha ', fecha_para_buscar)
 
 orden: Orden = Orden(nombre="ORD9814257")
-for producto in productos:
-    for periodo in periodos:
-        orden.agregar_producto_con_detalle(producto=producto, periodo=periodo, cantidad=randint(0, 1000))
+
+
+for periodo in periodos:
+    orden.agregar_periodo(periodo)
+
+for producto in productos[:4]:
+    orden.agregar_producto(producto)
+
 
 df: pd.DataFrame = orden.generar_dataframe()
+print(df)
 
+orden.agregar_codigo_producto_fecha_con_cantidad("A01", datetime(2024, 1, 1), 100)
+orden.agregar_codigo_producto_fecha_con_cantidad("A02", datetime(2024, 1, 2), 100)
+orden.agregar_codigo_producto_fecha_con_cantidad("C01", datetime(2024, 1, 3), 100)
+orden.agregar_codigo_producto_fecha_con_cantidad("C02", datetime(2024, 1, 4), 100)
+orden.agregar_codigo_producto_fecha_con_cantidad("C02", datetime(2024, 1, 4, 15, 30), 300)
+
+df: pd.DataFrame = orden.generar_dataframe()
 print(df)

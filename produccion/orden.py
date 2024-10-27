@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 
 import pandas as pd
@@ -11,7 +12,7 @@ class Orden:
         self._nombre = nombre
         self._periodos: List["Periodo"] = []
         self._productos: Dict[str, "Producto"] = {}
-        self._contenido: Dict[Tuple[Tuple["Producto", "Periodo"], float]] = {}
+        self._contenido: Dict[Tuple[Tuple["Producto", "Periodo"]], float] = {}
 
     @property
     def nombre(self) -> str:
@@ -30,12 +31,15 @@ class Orden:
         return list(self._productos.keys())
 
     @property
-    def contenido(self) -> Dict[Tuple[Tuple["Producto", "Periodo"], float]]:
+    def contenido(self) -> Dict[Tuple[Tuple["Producto", "Periodo"]], float]:
         return self._contenido
 
     @property
     def contenido_simplificado(self) -> List[Tuple[str, str, float]]:
-        return [(k[0].codigo, str(k[1]), v) for k, v in self._contenido.items()]
+        return [
+            (k[0].codigo, k[1].fecha_inicio.isoformat(), v)
+            for k, v in self._contenido.items()
+        ]
 
     def agregar_producto(self, producto: "Producto") -> bool:
         if producto.codigo in self._productos:
@@ -45,6 +49,12 @@ class Orden:
             for periodo in self._periodos:
                 self.agregar_producto_periodo_con_cantidad(producto, periodo, 0)
             return True
+
+    def encontrar_producto_por_codigo(self, codigo: str) -> Optional["Producto"]:
+        if codigo in self._productos:
+            return self._productos[codigo]
+        else:
+            return None
 
     def agregar_periodo(self, periodo: "Periodo") -> bool:
         periodo_existente: Optional["Periodo"] = PeriodoUtil.identificarPeriodoPorFecha(
@@ -59,6 +69,9 @@ class Orden:
         else:
             return False
 
+    def encontrar_periodo_por_fecha(self, fecha: datetime) -> Optional["Periodo"]:
+        return PeriodoUtil.identificarPeriodoPorFecha(self._periodos, fecha)
+
     def agregar_producto_periodo_con_cantidad(
         self, producto: "Producto", periodo: "Periodo", cantidad: float
     ) -> float:
@@ -67,24 +80,36 @@ class Orden:
             producto = self._productos[producto.codigo]
         periodo_agregado: bool = self.agregar_periodo(periodo)
         if not periodo_agregado:
-            periodo = PeriodoUtil.identificarPeriodoPorFecha(self._periodos, periodo.fecha_inicio)
-        total:float = 0
+            periodo = PeriodoUtil.identificarPeriodoPorFecha(
+                self._periodos, periodo.fecha_inicio
+            )
+        total: float = 0
         if (producto, periodo) in self._contenido:
             total = self._contenido[(producto, periodo)]
-        
+
         total = total + cantidad
         self._contenido[(producto, periodo)] = total
 
         return total
-    
+
+    def agregar_codigo_producto_fecha_con_cantidad(
+        self, codigo_producto: str, fecha: datetime, cantidad: float
+    ) -> float:
+        producto : Optional["Producto"] = self.encontrar_producto_por_codigo(codigo_producto)
+        periodo: Optional["Periodo"] = self.encontrar_periodo_por_fecha(fecha)
+        if producto is not None and periodo is not None:
+            return self.agregar_producto_periodo_con_cantidad(producto, periodo, cantidad)
+        else:
+            return 0
+
     def generar_dataframe(self) -> pd.DataFrame:
         data: List[Tuple[str, str, float]] = self.contenido_simplificado
 
         # Crear un DataFrame a partir de la lista de tuplas
-        df = pd.DataFrame(data, columns=['Producto', 'Período', 'Cantidad'])
+        df = pd.DataFrame(data, columns=["Producto", "Período", "Cantidad"])
 
         # Usar pivot para reorganizar los datos
-        df = df.pivot(index='Producto', columns='Período', values='Cantidad')
+        df = df.pivot(index="Producto", columns="Período", values="Cantidad")
 
         return df
 
@@ -94,43 +119,6 @@ class Orden:
     def __str__(self):
         return f"Orden {self.nombre} con {len(self.contenido)} líneas"
 
-
-# class Orden:
-#     def __init__(
-#         self, nombre: str, detalle: Dict[Producto, Dict["Periodo", float]] = {}
-#     ):
-#         self._nombre = nombre
-#         self._detalle = detalle
-
-#     @property
-#     def nombre(self) -> str:
-#         return self._nombre
-
-#     @nombre.setter
-#     def nombre(self, value: str) -> None:
-#         self._nombre = value
-
-#     @property
-#     def detalle(self) -> Dict[Producto, Dict["Periodo", float]]:
-#         return self._detalle
-
-#     @detalle.setter
-#     def detalle(self, value: Dict[Producto, Dict["Periodo", float]]):
-#         self._detalle = value
-
-#     def agregar_producto_con_detalle(
-#         self, producto: Producto, detalle: Dict["Periodo", float]
-#     ) -> None:
-#         self.detalle[producto] = detalle
-
-#     def listar_productos(self) -> List[Producto]:
-#         return list(self.detalle.keys())
-
-#     def __repr__(self):
-#         return f"Orden(nombre={self.nombre!r}, detalle={self.detalle!r})"
-
-#     def __str__(self):
-#         return f"Orden {self.nombre} con {len(self.detalle)} productos"
 
 class OrdenUtil:
     @staticmethod
