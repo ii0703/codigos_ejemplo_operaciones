@@ -138,3 +138,4 @@ orden.agregar_codigo_producto_fecha_con_cantidad("C02", datetime(2024, 1, 4, 15,
 
 df: pd.DataFrame = orden.generar_dataframe()
 print(df)
+
