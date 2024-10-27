@@ -1,10 +1,12 @@
 from produccion.base import Producto
 from typing import List, Dict
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, time
 
 
 class Periodo:
     def __init__(self, fecha_inicio: datetime, delta: timedelta = timedelta(days=1)):
+        if not isinstance(fecha_inicio, datetime):
+            fecha_inicio = datetime.combine(fecha_inicio, time())
         self._fecha_inicio = fecha_inicio
         self._delta = delta
         self._anno_iso, self._numero_semana_iso, self._dia_semana_iso = (
@@ -31,7 +33,7 @@ class Periodo:
         return self._delta
 
     @delta.setter
-    def delta(self, valor_nuevo: timedelta):
+    def delta(self, valor_nuevo: timedelta) -> None:
         self._delta = valor_nuevo
 
     @property
@@ -48,10 +50,10 @@ class Periodo:
         return self.fecha_inicio <= fecha < self.fecha_final
 
     def __repr__(self):
-        return self.fecha_inicio.isoformat()
+        return '[{},{})'.format(self.fecha_inicio.isoformat(), self.fecha_final.isoformat())
 
     def __str__(self):
-        return self.fecha_inicio.isoformat()
+        return '[{},{})'.format(self.fecha_inicio.isoformat(), self.fecha_final.isoformat())
 
 
 class Orden:
@@ -92,7 +94,6 @@ class Orden:
         return f"Orden {self.nombre} con {len(self.detalle)} productos"
 
 
-
 class Demanda(Orden):
 
     def __repr__(self):
@@ -100,4 +101,3 @@ class Demanda(Orden):
 
     def __str__(self):
         return f"Demanda {self.nombre} con {len(self.detalle)} productos"
-

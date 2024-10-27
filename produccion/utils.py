@@ -1,14 +1,14 @@
 from produccion.base import Producto
 from produccion.planificacion import Periodo, Orden
 from typing import List, Dict
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, time
 from math import ceil, floor
 
 
 class PeriodoUtil:
     @staticmethod
     def generarPeriodosPorNumeroDias(
-        inicio: date, cantidad_periodos: int = 1, cantidad_dias: int = 1
+        inicio: datetime, cantidad_periodos: int = 1, cantidad_dias: int = 1
     ) -> List["Periodo"]:
         salida: List["Periodo"] = []
         delta: timedelta = timedelta(days=cantidad_dias)
@@ -19,7 +19,7 @@ class PeriodoUtil:
 
     @staticmethod
     def generarPeriodosPorNumeroSemanas(
-        inicio: date, cantidad_periodos: int = 1, cantidad_semanas: int = 1
+        inicio: datetime, cantidad_periodos: int = 1, cantidad_semanas: int = 1
     ) -> List["Periodo"]:
         salida: List["Periodo"] = []
         delta: timedelta = timedelta(weeks=cantidad_semanas)
@@ -30,12 +30,21 @@ class PeriodoUtil:
 
     @staticmethod
     def generarPeriodosPorNumeroHoras(
-        inicio: date, cantidad_periodos: int = 1, cantidad_horas: int = 1
+        inicio: datetime, cantidad_periodos: int = 1, cantidad_horas: int = 1
     ) -> List["Periodo"]:
         salida: List["Periodo"] = []
+        periodos: List[datetime] = []
         delta: timedelta = timedelta(hours=cantidad_horas)
+
         for i in range(cantidad_periodos):
-            salida.append(Periodo(fecha_inicio=(inicio + i * delta), delta=delta))
+            periodos.append(datetime.combine(inicio,time()) + (i * delta))
+            # inicio_temp: datetime = datetime.combine(inicio, time()) + (i * delta)
+            # salida.append(Periodo(fecha_inicio=inicio_temp, delta=delta))
+        
+        for p in periodos:
+            salida.append(Periodo(fecha_inicio=p, delta=delta))
+
+        # print(', '.join([p.isoformat() for p in periodos]))
 
         return salida
 

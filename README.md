@@ -1,2 +1,18 @@
-# codigos_ejemplo_operaciones
-Este repositorio contiene códigos de ejemplo de algunos de los temas visto en el curso de ingeniería de operaciones.
+# Códigos de ejemplo para el Curso de Ingeniería de Operaciones
+
+## Requerimientos
+
+Para realizar esto requiere:
+- Pandas
+
+## Contenidos
+
+### Elementos básicos
+
+### Ordenes
+
+### Líneas de producción
+
+### Secuenciamiento
+
+

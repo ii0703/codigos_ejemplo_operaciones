@@ -119,3 +119,23 @@ lineaA.agregar_duracion_producto(
 #     print(producto.codigo)
 
 # test
+# print("Test de generación de periodos X días")
+# periodos_test: List["Periodo"] = PeriodoUtil.generarPeriodosPorNumeroDias(
+#     date(2024, month=1, day=1), cantidad_periodos=7, cantidad_dias=1
+# )
+# for periodo in periodos_test:
+#     print(periodo)
+
+print("Test de generación de periodos X horas")
+periodos_test: List["Periodo"] = PeriodoUtil.generarPeriodosPorNumeroHoras(
+    date(2024, month=1, day=1), cantidad_periodos=7, cantidad_horas=1
+)
+for periodo in periodos_test:
+    print(periodo)
+
+# print("Test de generación de periodos X semanas")
+# periodos_test: List["Periodo"] = PeriodoUtil.generarPeriodosPorNumeroSemanas(
+#     date(2024, month=1, day=1), cantidad_periodos=7, cantidad_semanas=1
+# )
+# for periodo in periodos_test:
+#     print(periodo)
