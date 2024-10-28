@@ -1,7 +1,10 @@
 from datetime import timedelta
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
+
+import pandas as pd
 
 from produccion.maquina import Maquina
+from produccion.orden import Orden
 
 
 class Linea:
@@ -55,11 +58,32 @@ class Linea:
             else:
                 duraciones.append(None)
         return duraciones
-    
-    @staticmethod
-    def evaluar_duracion_por_maquina_para_producto(duraciones: List[Optional[Tuple["Maquina", timedelta]]]) -> bool:
-        return all([d is not None for d in duraciones])
 
+    def obtener_tiempo_produccion_producto(
+        self, codigos_producto: List[str]
+    ) -> Dict[str, Dict[str, timedelta]]:
+        resultado: Dict[str, Dict[str, timedelta]] = {}
+        for codigo_producto in codigos_producto:
+            duraciones: List[Optional[Tuple["Maquina", timedelta]]] = (
+                self.obtener_duracion_por_maquina_para_producto(codigo_producto)
+            )
+            if self.evaluar_duracion_por_maquina_para_producto(duraciones):
+                resultado[codigo_producto] = {
+                    maquina.codigo: duracion for maquina, duracion in duraciones
+                }
+
+        return resultado
+    
+    def calcular_tiempo_orden(self, orden: "Orden") -> Dict[str, Dict[str, Dict[str, timedelta]]]:
+        tiempo_producccion_unitaria: Dict[str, Dict[str, timedelta]] = self.obtener_tiempo_produccion_producto(orden.productos)
+        datos: pd.DataFrame = orden.generar_dataframe()
+        return {}
+
+    @staticmethod
+    def evaluar_duracion_por_maquina_para_producto(
+        duraciones: List[Optional[Tuple["Maquina", timedelta]]]
+    ) -> bool:
+        return all([d is not None for d in duraciones])
 
     def __repr__(self):
         return f"Linea(nombre={self.nombre!r}, secuencia_maquinas={self.secuencia_maquinas!r})"
