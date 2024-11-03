@@ -173,4 +173,4 @@ orden.agregar_codigo_producto_fecha_con_cantidad("C02", datetime(2024, 1, 4, 15,
 # for k, v in tiempo_producccion_unitaria.items():
 #     print(k, v)
 
-lineaA.calcular_tiempo_orden(orden)
+print(lineaA.calcular_tiempo_orden(orden))
