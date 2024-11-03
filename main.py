@@ -134,20 +134,20 @@ lineaA.agregar_duracion_producto(
     duracion=TimeDeltaUtils.calcular_duracion_unidad_por_hora(20),
 )
 
-print("A01")
-duraciones: List[Optional[Tuple["Maquina", timedelta]]] = lineaA.obtener_duracion_por_maquina_para_producto("A01")
-for duracion in duraciones:
-    print(duracion[0].nombre, duracion[1])
+# print("A01")
+# duraciones: List[Optional[Tuple["Maquina", timedelta]]] = lineaA.obtener_duracion_por_maquina_para_producto("A01")
+# for duracion in duraciones:
+#     print(duracion[0].nombre, duracion[1])
 
-print("C01")
-duraciones: List[Optional[Tuple["Maquina", timedelta]]] = lineaA.obtener_duracion_por_maquina_para_producto("C01")
-for duracion in duraciones:
-    print(duracion[0].nombre, duracion[1])
+# print("C01")
+# duraciones: List[Optional[Tuple["Maquina", timedelta]]] = lineaA.obtener_duracion_por_maquina_para_producto("C01")
+# for duracion in duraciones:
+#     print(duracion[0].nombre, duracion[1])
 
-print("C03")
-duraciones: List[Optional[Tuple["Maquina", timedelta]]] = lineaA.obtener_duracion_por_maquina_para_producto("C03")
-for duracion in duraciones:
-    print(duracion[0].nombre, duracion[1])
+# print("C03")
+# duraciones: List[Optional[Tuple["Maquina", timedelta]]] = lineaA.obtener_duracion_por_maquina_para_producto("C03")
+# for duracion in duraciones:
+#     print(duracion[0].nombre, duracion[1])
 
 
 orden: Orden = Orden(nombre="ORD9814257")
@@ -166,11 +166,11 @@ orden.agregar_codigo_producto_fecha_con_cantidad("C01", datetime(2024, 1, 3), 10
 orden.agregar_codigo_producto_fecha_con_cantidad("C02", datetime(2024, 1, 4), 100)
 orden.agregar_codigo_producto_fecha_con_cantidad("C02", datetime(2024, 1, 4, 15, 30), 300)
 
-df: pd.DataFrame = orden.generar_dataframe()
-print(df)
+# df: pd.DataFrame = orden.generar_dataframe()
+# print(df)
 
-tiempo_producccion_unitaria: Dict[str, Dict[str, timedelta]] = lineaA.obtener_tiempo_produccion_producto(orden.productos)
-for k, v in tiempo_producccion_unitaria.items():
-    print(k, v)
+# tiempo_producccion_unitaria: Dict[str, Dict[str, timedelta]] = lineaA.obtener_tiempo_produccion_producto(orden.productos)
+# for k, v in tiempo_producccion_unitaria.items():
+#     print(k, v)
 
 lineaA.calcular_tiempo_orden(orden)
