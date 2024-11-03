@@ -1,6 +1,7 @@
 from datetime import timedelta
 from typing import Dict, List, Optional, Tuple
 
+import numpy as np
 import pandas as pd
 
 from produccion.maquina import Maquina
@@ -83,27 +84,21 @@ class Linea:
         tiempos: Dict[str, Dict[str, timedelta]] = (
             self.obtener_tiempo_produccion_producto(orden.productos)
         )
-        print("prueba")
-        print("datos")
-        print(datos)
-        print("tiempos")
-        print(tiempos)
-
-        # Convertir timedelta a segundos para facilitar la multiplicación
-        # timedeltas_segundos = [td.total_seconds() for td in tiempos]
 
         # Crear un nuevo DataFrame para almacenar los resultados
-        df_resultado: pd.DataFrame = pd.DataFrame().reindex_like(datos)
-
-        # producto:List["Producto"] = orden.productos
+        df_resultado = pd.DataFrame(
+            np.zeros((len(datos.index), len(datos.columns)), dtype="timedelta64[ns]"),
+            index=datos.index,
+            columns=datos.columns,
+        )
 
         # Iterar sobre las filas (productos)
         for producto in datos.index:
             # Iterar sobre las filas (productos)
             # Obtener los tiempos de producción del producto
-            timedeltas_segundos = [t.seconds for t in tiempos[producto].values()]
-            print("timedeltas_segundos")
-            print(timedeltas_segundos)
+            timedeltas_segundos = [
+                t.total_seconds() for t in tiempos[producto].values()
+            ]
             for fecha in datos.columns:
                 cantidad = datos.loc[producto, fecha]
                 total = sum([t * cantidad for t in timedeltas_segundos])
@@ -113,9 +108,6 @@ class Linea:
                 )  # 'hours', 'minutes', 'seconds', etc.
                 df_resultado.loc[producto, fecha] = tiempo_total
 
-        print("df_resultado")
-        print(df_resultado)
-        print("prueba end")
         return df_resultado
 
     @staticmethod
